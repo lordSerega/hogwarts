@@ -48,6 +48,24 @@ public class StudentController {
         return ResponseEntity.ok().build();
     }
 
+    @GetMapping("/findAllByFacultyId")
+    public ResponseEntity<Collection<Student>> findAllByFacultyId(@RequestParam int id){
+        if (id != -1) {
+            return ResponseEntity.ok(studentService.findAllByFacultyId(id));
+        }
+        return ResponseEntity.ok(Collections.emptyList());
+    }
+
+
+    @GetMapping("/findByAgeBetween")
+    public ResponseEntity<Collection<Student>> findByAgeBetween(@RequestParam int min,
+                                                                @RequestParam int max) {
+        if (min != -1 && max != -1) {
+            return ResponseEntity.ok(studentService.findByAgeBetween(min, max));
+        }
+        return ResponseEntity.ok(Collections.emptyList());
+    }
+
     @GetMapping
     public ResponseEntity<Collection<Student>> findStudentsByAge(@RequestParam int age) {
         if (age > 0) {

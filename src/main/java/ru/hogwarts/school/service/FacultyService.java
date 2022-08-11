@@ -35,6 +35,10 @@ public class FacultyService {
     }
 
 
+    public Collection<Faculty> findAllByColorOrNameIgnoreCase(String color, String name) {
+        return facultyRepository.findAllByColorIgnoreCaseOrNameIgnoreCase(color,name);
+    }
+
     public Collection<Faculty> getFacultiesByColor(String color) {
         return facultyRepository.findAllByColor(color);
     }
