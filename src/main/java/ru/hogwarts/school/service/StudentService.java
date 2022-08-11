@@ -21,11 +21,12 @@ public class StudentService {
     }
 
     public Student createStudent(Student student) {
+        student.setId(-1);
         return studentRepository.save(student);
     }
 
     public Student readStudent(long id) {
-        return studentRepository.findById(id).get();
+        return studentRepository.findById(id).orElseThrow();
     }
 
     public Student updateStudent(Student student) {
@@ -38,6 +39,6 @@ public class StudentService {
     }
 
     public Collection<Student> findStudentsByAge(int age) {
-        return studentRepository.findAll();
+        return studentRepository.findAllByAge(age);
     }
 }
