@@ -17,6 +17,7 @@ import java.io.*;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.util.*;
+import java.util.stream.Collectors;
 
 import static java.nio.file.StandardOpenOption.CREATE_NEW;
 
@@ -27,6 +28,7 @@ public class StudentService {
     private final AvatarRepository avatarRepository;
 
     Logger logger = LoggerFactory.getLogger(StudentService.class);
+
     public StudentService(StudentRepository studentRepository, AvatarRepository avatarRepository) {
         this.studentRepository = studentRepository;
         this.avatarRepository = avatarRepository;
@@ -72,14 +74,14 @@ public class StudentService {
 
     }
 
-    public Collection<Student>  findAllByFacultyId(int id){
+    public Collection<Student> findAllByFacultyId(int id) {
         logger.info("Was invoked method for find all student in faculty by ID {}", id);
         return studentRepository.findAllByFacultyId(id);
     }
 
-    public Collection<Student>  findByAgeBetween(int min, int max){
-        logger.info("Was invoked method for find student between {} and {}", min,max);
-        return studentRepository.findByAgeBetween(min,max);
+    public Collection<Student> findByAgeBetween(int min, int max) {
+        logger.info("Was invoked method for find student between {} and {}", min, max);
+        return studentRepository.findByAgeBetween(min, max);
     }
 
     public Collection<Student> findStudentsByAge(int age) {
@@ -88,5 +90,18 @@ public class StudentService {
     }
 
 
+    public List findAllStudentsOrderAsc() {
+        return studentRepository.findAll().stream().map(user -> user.getName())
+                .filter(s -> s.startsWith("a"))
+                .sorted((s1, s2) -> s1.compareTo(s2))
+                .map(s -> s.toUpperCase())
+                .collect(Collectors.toList());
 
+                }
+
+    public Double getAverageAge() {
+        return studentRepository.findAll().stream().mapToDouble(user -> user.getAge())
+                .average()
+                .getAsDouble();
+    }
 }

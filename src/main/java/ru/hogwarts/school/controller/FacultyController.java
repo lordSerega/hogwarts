@@ -7,6 +7,8 @@ import ru.hogwarts.school.service.FacultyService;
 
 import java.util.Collection;
 import java.util.Collections;
+import java.util.Optional;
+import java.util.stream.Stream;
 
 
 @RestController
@@ -64,5 +66,19 @@ public class FacultyController {
             return ResponseEntity.ok(facultyService.findAllByColorOrNameIgnoreCase(color,name));
         }
         return ResponseEntity.ok(Collections.emptyList());
+    }
+
+    @PostMapping(value = "/largestName")
+    public ResponseEntity<Optional<String>> largestName() {
+        return ResponseEntity.ok(facultyService.getLargestName());
+    }
+
+    @PostMapping(value = "/math")
+    public ResponseEntity<Integer> getMath() {
+        int sum = Stream.iterate(1, a -> a +1)
+                .limit(1_000_000)
+                .parallel()
+                .reduce(0, (a, b) -> a + b );
+        return ResponseEntity.ok(sum);
     }
 }

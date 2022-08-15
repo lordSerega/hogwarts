@@ -6,9 +6,7 @@ import org.springframework.stereotype.Service;
 import ru.hogwarts.school.model.Faculty;
 import ru.hogwarts.school.repository.FacultyRepository;
 
-import java.util.ArrayList;
-import java.util.Collection;
-import java.util.HashMap;
+import java.util.*;
 
 @Service("FacultyService")
 public class FacultyService {
@@ -52,5 +50,12 @@ public class FacultyService {
     public Collection<Faculty> getFacultiesByColor(String color) {
         logger.info("Was invoked method for find faculties by color");
         return facultyRepository.findAllByColor(color);
+    }
+
+    public Optional<String> getLargestName() {
+        return facultyRepository.findAll().stream()
+                .map(user -> user.getName())
+                .max(Comparator.comparingInt(String::length));
+
     }
 }

@@ -19,12 +19,14 @@ import java.nio.file.Files;
 import java.nio.file.Path;
 import java.util.Collection;
 import java.util.Collections;
+import java.util.List;
 
 @RestController
 @RequestMapping("student")
 public class StudentController {
 
     private final StudentService studentService;
+
 
     public StudentController(StudentService studentService) {
         this.studentService = studentService;
@@ -34,6 +36,7 @@ public class StudentController {
     public Student createStudent(@RequestBody Student student) {
         return studentService.createStudent(student);
     }
+
 
     @GetMapping("{id}")
     public ResponseEntity<Student> readStudent(@PathVariable Long id) {
@@ -60,7 +63,7 @@ public class StudentController {
     }
 
     @GetMapping("/findAllByFacultyId")
-    public ResponseEntity<Collection<Student>> findAllByFacultyId(@RequestParam int id){
+    public ResponseEntity<Collection<Student>> findAllByFacultyId(@RequestParam int id) {
         if (id != -1) {
             return ResponseEntity.ok(studentService.findAllByFacultyId(id));
         }
@@ -85,6 +88,15 @@ public class StudentController {
         return ResponseEntity.ok(Collections.emptyList());
     }
 
+    @PostMapping(value = "/findAll")
+    public ResponseEntity<List> findAllStudentsOrderAsc() {
+        return ResponseEntity.ok(studentService.findAllStudentsOrderAsc());
+    }
+
+    @PostMapping(value = "/averageAge")
+    public ResponseEntity<Double> getAverageAge() {
+        return ResponseEntity.ok(studentService.getAverageAge());
+    }
 
 
 
