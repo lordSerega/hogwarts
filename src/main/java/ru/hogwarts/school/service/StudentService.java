@@ -1,50 +1,92 @@
 package ru.hogwarts.school.service;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.multipart.MultipartFile;
+import ru.hogwarts.school.model.AllStudents;
+import ru.hogwarts.school.model.Avatar;
 import ru.hogwarts.school.model.Student;
+import ru.hogwarts.school.repository.AvatarRepository;
+import ru.hogwarts.school.repository.FacultyRepository;
+import ru.hogwarts.school.repository.StudentRepository;
 
-import java.util.ArrayList;
-import java.util.Collection;
-import java.util.HashMap;
-import java.util.Map;
+import java.io.*;
+import java.nio.file.Files;
+import java.nio.file.Path;
+import java.util.*;
+
+import static java.nio.file.StandardOpenOption.CREATE_NEW;
 
 @Service("StudentService")
 public class StudentService {
 
-    private final Map<Long, Student> students = new HashMap<>();
-    private long lastId = 0;
+    private final StudentRepository studentRepository;
+    private final AvatarRepository avatarRepository;
+
+    Logger logger = LoggerFactory.getLogger(StudentService.class);
+    public StudentService(StudentRepository studentRepository, AvatarRepository avatarRepository) {
+        this.studentRepository = studentRepository;
+        this.avatarRepository = avatarRepository;
+    }
+
+
+    public Integer getCountStudents() {
+        logger.info("Was invoked method for count students");
+        return studentRepository.getCountStudents();
+    }
+
+    public Integer getMiddleAge() {
+        logger.info("Was invoked method for getting meddle age");
+        return studentRepository.getMiddleAge();
+    }
+
+
+    public List<AllStudents> getAllStudents() {
+        logger.info("Was invoked method for getting list of all students");
+        return studentRepository.getAllStudents();
+    }
+
 
     public Student createStudent(Student student) {
-        student.setId(++lastId);
-        students.put(lastId, student);
-        return student;
+        logger.info("Was invoked method for create student");
+        student.setId(-1);
+        return studentRepository.save(student);
     }
 
     public Student readStudent(long id) {
-        return students.get(id);
+        logger.info("Was invoked method for find student by ID {}", id);
+        return studentRepository.findById(id).orElseThrow();
     }
 
     public Student updateStudent(Student student) {
-        if (students.containsKey(student.getId())) {
-            students.put(student.getId(), student);
-            return student;
-        }
-        return null;
+        logger.info("Was invoked method for update student");
+        return studentRepository.save(student);
     }
 
-    public Student deleteStudent(long id) {
-        return students.remove(id);
+    public void deleteStudent(long id) {
+        logger.info("Was invoked method for delete student by ID {}", id);
+        studentRepository.deleteById(id);
+
     }
 
+    public Collection<Student>  findAllByFacultyId(int id){
+        logger.info("Was invoked method for find all student in faculty by ID {}", id);
+        return studentRepository.findAllByFacultyId(id);
+    }
+
+    public Collection<Student>  findByAgeBetween(int min, int max){
+        logger.info("Was invoked method for find student between {} and {}", min,max);
+        return studentRepository.findByAgeBetween(min,max);
+    }
 
     public Collection<Student> findStudentsByAge(int age) {
-        ArrayList<Student> result = new ArrayList<>();
-        for (Student student : students.values()) {
-            if (student.getAge() == age) {
-                result.add(student);
-            }
-        }
-        return result;
+        logger.info("Was invoked method for find all student where age =  {}", age);
+        return studentRepository.findAllByAge(age);
     }
+
+
+
 }
