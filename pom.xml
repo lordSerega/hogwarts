@@ -41,15 +41,15 @@
 			<artifactId>postgresql</artifactId>
 			<version>42.3.2</version>
 		</dependency>
-    </dependencies>
+		<dependency>
 
-	<build>
-		<plugins>
-			<plugin>
-				<groupId>org.springframework.boot</groupId>
-				<artifactId>spring-boot-maven-plugin</artifactId>
-			</plugin>
-		</plugins>
-	</build>
+		<groupId>org.springframework.boot</groupId>
+		<artifactId>spring-boot-starter-web</artifactId>
+	</dependency>
+
+</dependencies>
+
+
+
 
 </project>
