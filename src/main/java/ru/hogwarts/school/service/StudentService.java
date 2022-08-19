@@ -91,7 +91,7 @@ public class StudentService {
 
 
     public List findAllStudentsOrderAsc() {
-        return studentRepository.findAll().stream().map(user -> user.getName())
+        return studentRepository.findAll().stream().map(student -> student.getName())
                 .filter(s -> s.startsWith("a"))
                 .sorted((s1, s2) -> s1.compareTo(s2))
                 .map(s -> s.toUpperCase())
@@ -104,4 +104,9 @@ public class StudentService {
                 .average()
                 .getAsDouble();
     }
+
+    public List<String> getAllNames() {
+        return studentRepository.getName();
+    }
+
 }

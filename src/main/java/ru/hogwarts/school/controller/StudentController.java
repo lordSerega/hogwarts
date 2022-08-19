@@ -1,25 +1,12 @@
 package ru.hogwarts.school.controller;
 
 
-import org.springframework.http.HttpHeaders;
-import org.springframework.http.HttpStatus;
-import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
-import org.springframework.web.multipart.MultipartFile;
-import ru.hogwarts.school.model.Avatar;
 import ru.hogwarts.school.model.Student;
 import ru.hogwarts.school.service.StudentService;
 
-import javax.servlet.http.HttpServletResponse;
-import java.io.IOException;
-import java.io.InputStream;
-import java.io.OutputStream;
-import java.nio.file.Files;
-import java.nio.file.Path;
-import java.util.Collection;
-import java.util.Collections;
-import java.util.List;
+import java.util.*;
 
 @RestController
 @RequestMapping("student")
@@ -27,6 +14,7 @@ public class StudentController {
 
     private final StudentService studentService;
 
+    public Object flag = new Object();
 
     public StudentController(StudentService studentService) {
         this.studentService = studentService;
@@ -72,8 +60,7 @@ public class StudentController {
 
 
     @GetMapping("/findByAgeBetween")
-    public ResponseEntity<Collection<Student>> findByAgeBetween(@RequestParam int min,
-                                                                @RequestParam int max) {
+    public ResponseEntity<Collection<Student>> findByAgeBetween(@RequestParam int min, @RequestParam int max) {
         if (min != -1 && max != -1) {
             return ResponseEntity.ok(studentService.findByAgeBetween(min, max));
         }
@@ -98,6 +85,47 @@ public class StudentController {
         return ResponseEntity.ok(studentService.getAverageAge());
     }
 
+    private void listNamesToConsole( int min, int max){
+        List<String> names = studentService.getAllNames();
+        for (int i = min; i <= max; i++) {
+            System.out.println(names.get(i).toString());
+        }
+    }
 
+    private void listNamesToConsoleSynchronized(int min, int max){
+        synchronized (flag) {
+            List<String> names = studentService.getAllNames();
+            for (int i = min; i <= max; i++) {
+                System.out.println(names.get(i).toString());
+            }
+        }
+    }
 
+    @PostMapping(value = "/getListStudents")
+    public void getListStudents() {
+        listNamesToConsole(0,1);
+        Thread thread = new Thread(() -> {
+            listNamesToConsole(1,2);
+        });
+        thread.start();
+
+        Thread thread2 = new Thread(() -> {
+            listNamesToConsole(4,5);
+        });
+        thread2.start();
+    }
+
+    @PostMapping(value = "/getListStudentsSynchronized")
+    public void getListStudentsSynchronized() {
+        listNamesToConsole(0,1);
+        Thread thread = new Thread(() -> {
+            listNamesToConsole(1,2);
+        });
+        thread.start();
+
+        Thread thread2 = new Thread(() -> {
+            listNamesToConsole(3,4);
+        });
+        thread2.start();
+    }
 }
