@@ -18,7 +18,6 @@ public class FacultyService {
     }
 
     public Faculty createFaculty(Faculty faculty) {
-        faculty.setId(-1);
         return facultyRepository.save(faculty);
     }
 

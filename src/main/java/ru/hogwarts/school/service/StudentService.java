@@ -2,6 +2,7 @@ package ru.hogwarts.school.service;
 
 import org.springframework.stereotype.Service;
 import org.springframework.web.bind.annotation.RequestMapping;
+import ru.hogwarts.school.model.Faculty;
 import ru.hogwarts.school.model.Student;
 import ru.hogwarts.school.repository.FacultyRepository;
 import ru.hogwarts.school.repository.StudentRepository;
@@ -21,7 +22,6 @@ public class StudentService {
     }
 
     public Student createStudent(Student student) {
-        student.setId(-1);
         return studentRepository.save(student);
     }
 
@@ -49,4 +49,10 @@ public class StudentService {
     public Collection<Student> findStudentsByAge(int age) {
         return studentRepository.findAllByAge(age);
     }
+
+
+    public Faculty facultyStudent(Long id) throws Exception {
+        return studentRepository.findById(id).orElseThrow(() -> new Exception("Студент не найден")).getFaculty();
+    }
+
 }

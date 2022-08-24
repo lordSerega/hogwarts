@@ -18,6 +18,11 @@ public class Student {
     private Faculty faculty;
 
 
+    public Faculty getFaculty(){
+        return  faculty;
+    }
+
+
     @Override
     public String toString() {
         return "Student{" +
