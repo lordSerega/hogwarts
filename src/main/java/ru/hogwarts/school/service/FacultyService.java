@@ -2,6 +2,7 @@ package ru.hogwarts.school.service;
 
 import org.springframework.stereotype.Service;
 import ru.hogwarts.school.model.Faculty;
+import ru.hogwarts.school.repository.FacultyRepository;
 
 import java.util.ArrayList;
 import java.util.Collection;
@@ -10,39 +11,34 @@ import java.util.HashMap;
 @Service("FacultyService")
 public class FacultyService {
 
-    private final HashMap<Long, Faculty> faculties = new HashMap<>();
-    private long lastId = 0;
+    private FacultyRepository facultyRepository;
+
+    public FacultyService(FacultyRepository facultyRepository) {
+        this.facultyRepository = facultyRepository;
+    }
 
     public Faculty createFaculty(Faculty faculty) {
-        faculty.setId(++lastId);
-        faculties.put(lastId, faculty);
-        return faculty;
+        return facultyRepository.save(faculty);
     }
 
     public Faculty readFaculty(long id) {
-        return faculties.get(id);
+        return facultyRepository.findById(id).orElseThrow();
     }
 
     public Faculty updateFaculty(Faculty faculty) {
-        if (faculties.containsKey(faculty.getId())) {
-            faculties.put(faculty.getId(), faculty);
-            return faculty;
-        }
-        return null;
+        return facultyRepository.save(faculty);
     }
 
-    public Faculty deleteFaculty(long id) {
-        return faculties.remove(id);
+    public void deleteFaculty(long id) {
+        facultyRepository.deleteById(id);
     }
 
+
+    public Collection<Faculty> findAllByColorOrNameIgnoreCase(String color, String name) {
+        return facultyRepository.findAllByColorIgnoreCaseOrNameIgnoreCase(color,name);
+    }
 
     public Collection<Faculty> getFacultiesByColor(String color) {
-        ArrayList<Faculty> result = new ArrayList<>();
-        for (Faculty faculty : faculties.values()) {
-            if (faculty.getColor() == color) {
-                result.add(faculty);
-            }
-        }
-        return result;
+        return facultyRepository.findAllByColor(color);
     }
 }
